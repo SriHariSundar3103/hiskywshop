@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useFirestore, useDoc } from '@/firebase';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -20,7 +20,11 @@ export default function SettingsPage() {
   const db = useFirestore();
   const { toast } = useToast();
   
-  const settingsRef = db ? doc(db, 'shopSettings', 'global') : null;
+  const settingsRef = useMemoFirebase(() => {
+    if (!db) return null;
+    return doc(db, 'shopSettings', 'global') as any;
+  }, [db]);
+
   const { data: settings, isLoading } = useDoc<MaintenanceSettings>(settingsRef);
   
   const [isEnabled, setIsEnabled] = useState(false);

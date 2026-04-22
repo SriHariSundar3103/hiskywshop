@@ -1,9 +1,9 @@
 'use client';
 
-import { useDoc, useFirestore } from '@/firebase';
+import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useUserProfile } from '@/firebase/auth/use-user-profile';
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
 
 interface MaintenanceSettings {
   isEnabled: boolean;
@@ -14,9 +14,12 @@ export function MaintenanceWrapper({ children }: { children: ReactNode }) {
   const db = useFirestore();
   const { isAdmin } = useUserProfile();
   
-  const { data: settings, isLoading } = useDoc<MaintenanceSettings>(
-    db ? doc(db, 'shopSettings', 'global') : null
-  );
+  const settingsRef = useMemoFirebase(() => {
+    if (!db) return null;
+    return doc(db, 'shopSettings', 'global') as any;
+  }, [db]);
+
+  const { data: settings, isLoading } = useDoc<MaintenanceSettings>(settingsRef);
 
   if (isLoading) {
     return null; // or a loading spinner
