@@ -127,7 +127,7 @@ export default function ProductDetailPage() {
           <div className="relative aspect-square overflow-hidden rounded-lg border">
             {productImages[0] && (
               <Image
-                src={productImages[0].url}
+                src={productImages[0].url.startsWith('/placeholder/') ? `https://picsum.photos/seed/${productImages[0].id}/600/600` : productImages[0].url}
                 alt={product.name}
                 fill
                 className="object-cover"
@@ -139,7 +139,7 @@ export default function ProductDetailPage() {
               <div key={index} className="relative aspect-square overflow-hidden rounded-lg border">
                 {img && (
                   <Image
-                    src={img.url}
+                    src={img.url.startsWith('/placeholder/') ? `https://picsum.photos/seed/${img.id}/600/600` : img.url}
                     alt={`${product.name} view ${index + 2}`}
                     fill
                     className="object-cover"

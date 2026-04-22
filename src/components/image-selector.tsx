@@ -110,11 +110,11 @@ export function ImageSelector({ selectedImages, onSelectionChange }: ImageSelect
                 onClick={() => handleImageClick(image.url)}
               >
                 <Image
-                  src={image.url}
+                  src={image.url.startsWith('/placeholder/') ? `https://picsum.photos/seed/${image.id}/600/600` : image.url}
                   alt={image.altText}
                   fill
                   className="object-cover transition-transform duration-300 hover:scale-105"
-                  unoptimized={!image.url.startsWith('/')}
+                  unoptimized={!image.url.startsWith('/') && !image.url.startsWith('/placeholder/')}
                 />
                 <div
                   className={cn(
