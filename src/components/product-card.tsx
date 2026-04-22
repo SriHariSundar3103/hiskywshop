@@ -13,9 +13,9 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, fromSearch }: ProductCardProps) {
-  // Use first image ID directly (local fallback)
+  // Use remote picsum for reliable fallback images
   const firstImageId = product.images[0];
-  const productImageUrl = firstImageId ? `/placeholder/${firstImageId}.jpg` : '/hero section.jpg';
+  const productImageUrl = firstImageId ? `https://picsum.photos/seed/${firstImageId}/600/600` : '/hero section.jpg';
   const productUrl = `/product/${product.id}${fromSearch ? '?from_search=' + encodeURIComponent(fromSearch) : ''}`;
 
   return (
