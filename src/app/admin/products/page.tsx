@@ -65,6 +65,8 @@ export default function AdminProductsPage() {
             <span className="sr-only">Image</span>
           </TableHead>
           <TableHead>Name</TableHead>
+          <TableHead>Category</TableHead>
+          <TableHead>Subcategory</TableHead>
           <TableHead>Status</TableHead>
           <TableHead className="hidden md:table-cell">Price</TableHead>
           <TableHead>
@@ -79,6 +81,8 @@ export default function AdminProductsPage() {
               <Skeleton className="h-16 w-16 rounded-md" />
             </TableCell>
             <TableCell><Skeleton className="h-6 w-48" /></TableCell>
+            <TableCell><Skeleton className="h-6 w-24" /></TableCell>
+            <TableCell><Skeleton className="h-6 w-24" /></TableCell>
             <TableCell><Skeleton className="h-6 w-24" /></TableCell>
             <TableCell className="hidden md:table-cell"><Skeleton className="h-6 w-20" /></TableCell>
             <TableCell><Skeleton className="h-8 w-8 rounded-full" /></TableCell>
@@ -115,6 +119,8 @@ export default function AdminProductsPage() {
                   <span className="sr-only">Image</span>
                 </TableHead>
                 <TableHead>Name</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>Subcategory</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="hidden md:table-cell">Price</TableHead>
                 <TableHead>
@@ -125,20 +131,23 @@ export default function AdminProductsPage() {
             <TableBody>
               {products.map((product) => {
                 const imageUrl = product.images && product.images.length > 0 ? product.images[0] : null;
+                const finalImageUrl = imageUrl?.startsWith('/placeholder/') ? `https://picsum.photos/seed/${product.id}/600/600` : imageUrl;
                 return (
                   <TableRow key={product.id}>
                     <TableCell className="hidden sm:table-cell">
-                      {imageUrl && (
+                      {finalImageUrl && (
                         <Image
                           alt={product.name}
                           className="aspect-square rounded-md object-cover"
                           height="64"
-                          src={imageUrl}
+                          src={finalImageUrl}
                           width="64"
                         />
                       )}
                     </TableCell>
                     <TableCell className="font-medium">{product.name}</TableCell>
+                    <TableCell>{product.category}</TableCell>
+                    <TableCell>{product.productType || '-'}</TableCell>
                     <TableCell>
                       <Badge variant={product.stockStatus === 'Available' ? 'outline' : 'secondary'}>
                         {product.stockStatus}

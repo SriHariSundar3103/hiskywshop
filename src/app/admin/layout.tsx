@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, Package, PanelLeft } from 'lucide-react';
+import { Home, Package, PlusCircle, Settings, LogOut, PanelLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import {
@@ -19,7 +19,9 @@ import { useEffect } from 'react';
 
 const navLinks = [
   { href: '/admin/dashboard', icon: Home, label: 'Dashboard' },
-  { href: '/admin/products', icon: Package, label: 'Products' },
+  { href: '/admin/products', icon: Package, label: 'Product List' },
+  { href: '/admin/products/new', icon: PlusCircle, label: 'Add Product' },
+  { href: '/admin/settings', icon: Settings, label: 'Maintenance Mode' },
 ];
 
 export default function AdminLayout({

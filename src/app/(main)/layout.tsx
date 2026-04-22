@@ -1,5 +1,6 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { MaintenanceWrapper } from "@/components/maintenance-wrapper";
 
 export default function MainLayout({
   children,
@@ -10,7 +11,9 @@ export default function MainLayout({
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow bg-background">
-        {children}
+        <MaintenanceWrapper>
+          {children}
+        </MaintenanceWrapper>
       </main>
       <Footer />
     </div>

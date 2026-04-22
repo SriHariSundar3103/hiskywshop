@@ -37,14 +37,14 @@ export function ProductProvider({ children }: { children: ReactNode }) {
   const { isAdmin, loading: profileLoading, user } = useUserProfile();
 
   const productsQuery = useMemoFirebase(() => {
-    if (!db || !user) return null;
+    if (!db) return null;
     return collection(db, 'products') as any;
-  }, [db, user]);
+  }, [db]);
 
   const imagesQuery = useMemoFirebase(() => {
-    if (!db || !user) return null;
+    if (!db) return null;
     return collection(db, 'images') as any;
-  }, [db, user]);
+  }, [db]);
 
   const { data: productsData, isLoading: collectionLoading } = useCollection<Product>(productsQuery);
   const { data: imagesData, isLoading: imagesLoading } = useCollection<Image>(imagesQuery);

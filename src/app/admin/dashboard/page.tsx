@@ -15,15 +15,17 @@ export default function AdminDashboardPage() {
   const stats = useMemo(() => {
     const safeProducts = products || [];
     const totalProducts = safeProducts.length;
-    const totalCategories = categories.length;
-    const inStock = safeProducts.filter(p => p.stockStatus === 'Available').length;
-    const outOfStock = totalProducts - inStock;
+    const menProducts = safeProducts.filter(p => p.category === 'Men').length;
+    const womenProducts = safeProducts.filter(p => p.category === 'Women').length;
+    const kidsProducts = safeProducts.filter(p => p.category === 'Kids').length;
+    const outOfStock = safeProducts.filter(p => p.stockStatus === 'Out of Stock').length;
+    
     const productsByCategory = categories.map(category => ({
       name: category.name,
       count: safeProducts.filter(p => p.category === category.name).length,
     }));
 
-    return { totalProducts, totalCategories, inStock, outOfStock, productsByCategory };
+    return { totalProducts, menProducts, womenProducts, kidsProducts, outOfStock, productsByCategory };
   }, [products]);
 
 
@@ -51,10 +53,11 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Dashboard</h1>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
         <StatCard title="Total Products" value={stats.totalProducts} icon={<Package className="h-4 w-4 text-muted-foreground" />} isLoading={loading} />
-        <StatCard title="Total Categories" value={stats.totalCategories} icon={<Shapes className="h-4 w-4 text-muted-foreground" />} isLoading={loading} />
-        <StatCard title="In Stock" value={stats.inStock} icon={<CheckCircle className="h-4 w-4 text-muted-foreground" />} isLoading={loading} />
+        <StatCard title="Men Products" value={stats.menProducts} icon={<Shapes className="h-4 w-4 text-muted-foreground" />} isLoading={loading} />
+        <StatCard title="Women Products" value={stats.womenProducts} icon={<Shapes className="h-4 w-4 text-muted-foreground" />} isLoading={loading} />
+        <StatCard title="Kids Products" value={stats.kidsProducts} icon={<Shapes className="h-4 w-4 text-muted-foreground" />} isLoading={loading} />
         <StatCard title="Out of Stock" value={stats.outOfStock} icon={<XCircle className="h-4 w-4 text-muted-foreground" />} isLoading={loading} />
       </div>
 
