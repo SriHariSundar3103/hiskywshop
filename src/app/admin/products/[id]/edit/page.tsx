@@ -274,7 +274,7 @@ export default function EditProductPage() {
                         control={form.control}
                         name="stockStatus"
                         render={({ field }) => (
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={field.onChange} defaultValue={field.value} name={field.name}>
                                 <SelectTrigger id="stockStatus" aria-label="Select status">
                                     <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
@@ -300,7 +300,7 @@ export default function EditProductPage() {
                         control={form.control}
                         name="category"
                         render={({ field }) => (
-                             <Select onValueChange={field.onChange} defaultValue={field.value}>
+                             <Select onValueChange={field.onChange} defaultValue={field.value} name={field.name}>
                                 <SelectTrigger id="category" aria-label="Select category">
                                     <SelectValue placeholder="Select category" />
                                 </SelectTrigger>
@@ -317,7 +317,7 @@ export default function EditProductPage() {
                         control={form.control}
                         name="productType"
                         render={({ field }) => (
-                             <Select onValueChange={field.onChange} value={field.value}>
+                             <Select onValueChange={field.onChange} value={field.value} name={field.name}>
                                 <SelectTrigger id="productType" aria-label="Select product type">
                                     <SelectValue placeholder="Select product type" />
                                 </SelectTrigger>

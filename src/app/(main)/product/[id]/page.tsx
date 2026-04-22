@@ -17,10 +17,11 @@ import { Badge } from '@/components/ui/badge';
 import { Star, CheckCircle, Phone, Heart } from 'lucide-react';
 import { ProductRecommendations } from '@/components/product-recommendations';
 import { Separator } from '@/components/ui/separator';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import type { Product } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Image as ImageType } from '@/lib/types';
+import { getSafeImageUrl } from '@/lib/utils';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -124,7 +125,7 @@ export default function ProductDetailPage() {
           <div className="relative aspect-square overflow-hidden rounded-lg border">
             {productImages[0] && (
               <Image
-                src={productImages[0].url.startsWith('/placeholder/') ? `https://picsum.photos/seed/${productImages[0].id}/600/600` : productImages[0].url}
+                src={getSafeImageUrl(productImages[0].url, productImages[0].id)}
                 alt={product.name}
                 fill
                 className="object-cover"
@@ -136,7 +137,7 @@ export default function ProductDetailPage() {
               <div key={index} className="relative aspect-square overflow-hidden rounded-lg border">
                 {img && (
                   <Image
-                    src={img.url.startsWith('/placeholder/') ? `https://picsum.photos/seed/${img.id}/600/600` : img.url}
+                    src={getSafeImageUrl(img.url, img.id)}
                     alt={`${product.name} view ${index + 2}`}
                     fill
                     className="object-cover"
@@ -198,4 +199,3 @@ export default function ProductDetailPage() {
     </div>
   );
 }
-    

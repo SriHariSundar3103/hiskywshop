@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { cn } from '@/lib/utils';
+import { cn, getSafeImageUrl } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Check, PlusCircle } from 'lucide-react';
 import { useProducts } from '@/context/product-context';
@@ -91,12 +91,36 @@ export function ImageSelector({ selectedImages, onSelectionChange }: ImageSelect
           </DialogContent>
         </Dialog>
       </div>
-      {productImages.length === 0 && (
-        <p className="text-sm text-muted-foreground text-center py-8 border rounded-md">
-          No images yet. Add an image by URL above, then select it.
-        </p>
+      {selectedImages.length > 0 && (
+        <div className="mb-4 space-y-2">
+            <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Selected Order (Main image first)</Label>
+            <div className="flex flex-wrap gap-2 p-2 border rounded-md bg-muted/30">
+                {selectedImages.map((url, index) => (
+                    <div key={url} className="relative group">
+                        <div className="relative h-16 w-16 rounded-md overflow-hidden border bg-background">
+                            <Image 
+                                src={getSafeImageUrl(url)} 
+                                alt={`Selected ${index}`} 
+                                fill 
+                                className="object-cover"
+                            />
+                        </div>
+                        <button 
+                            type="button"
+                            onClick={() => handleImageClick(url)}
+                            className="absolute -top-1.5 -right-1.5 bg-destructive text-destructive-foreground rounded-full h-4 w-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                            <span className="text-[10px] leading-none">×</span>
+                        </button>
+                        <div className="absolute -bottom-1 -left-1 bg-primary text-primary-foreground text-[10px] h-4 w-4 rounded-full flex items-center justify-center font-bold">
+                            {index + 1}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
       )}
-      <ScrollArea className="h-72 rounded-md border">
+      <ScrollArea className="h-64 rounded-md border">
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 p-4">
           {productImages.map((image) => {
             const isSelected = selectedImages.includes(image.url);
@@ -110,11 +134,10 @@ export function ImageSelector({ selectedImages, onSelectionChange }: ImageSelect
                 onClick={() => handleImageClick(image.url)}
               >
                 <Image
-                  src={image.url.startsWith('/placeholder/') ? `https://picsum.photos/seed/${image.id}/600/600` : image.url}
+                  src={getSafeImageUrl(image.url, image.id)}
                   alt={image.altText}
                   fill
                   className="object-cover transition-transform duration-300 hover:scale-105"
-                  unoptimized={!image.url.startsWith('/') && !image.url.startsWith('/placeholder/')}
                 />
                 <div
                   className={cn(

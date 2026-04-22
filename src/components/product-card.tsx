@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Star, Heart, Eye, Phone } from 'lucide-react';
 import { businessDetails } from '@/lib/data';
+import { cn, getSafeImageUrl } from '@/lib/utils';
 
 interface ProductCardProps {
   product: Product;
@@ -13,9 +14,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, fromSearch }: ProductCardProps) {
-  // Use remote picsum for reliable fallback images
-  const firstImageId = product.images[0];
-  const productImageUrl = firstImageId ? `https://picsum.photos/seed/${firstImageId}/600/600` : '/hero section.jpg';
+  const firstImageId = product.images?.[0];
+  const productImageUrl = getSafeImageUrl(firstImageId);
   const productUrl = `/product/${product.id}${fromSearch ? '?from_search=' + encodeURIComponent(fromSearch) : ''}`;
 
   return (

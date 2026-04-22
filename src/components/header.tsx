@@ -102,12 +102,12 @@ function UserNav() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {isAdmin && (
-                  <DropdownMenuItem onClick={() => router.push('/admin/dashboard')} className="flex w-full cursor-pointer items-center">
+                  <DropdownMenuItem onSelect={() => router.push('/admin/dashboard')} className="flex w-full cursor-pointer items-center">
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     <span>Admin Dashboard</span>
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem onClick={handleLogout}>
+                <DropdownMenuItem onSelect={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                 </DropdownMenuItem>
@@ -146,6 +146,7 @@ export function Header() {
           <div className="grid grid-cols-4 items-center gap-4">
             <Input
               id="search"
+              name="search"
               placeholder="Search watches, shirts, pants..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
