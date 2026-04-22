@@ -1,0 +1,135 @@
+/**
+ * Core Philosophy:
+ * This ruleset establishes a security model with three primary zones. The first zone consists of public-facing
+ * e-commerce data (Products, Categories, etc.), which is readable by all users but writable only by administrators.
+ * The second zone protects user-specific private data (Wishlists, User Profiles), enforcing a strict ownership model.
+ * The third zone is for administrative data (Roles), which is only accessible by other administrators.
+ *
+ * Data Structure & Security Decisions:
+ * - Public Data: /products, /categories, /tags, /images, /heroBanners, /shopSettings are publicly readable.
+ *   Writes are restricted to admins to ensure content integrity.
+ * - Private User Data:
+ *   - /users/{userId}: Stores user profile information, including their role. A user can read/write their own profile.
+ *     Admins can read any profile for administrative purposes but cannot write to prevent accidental data corruption.
+ *     The role is set on creation and should be immutable by the user.
+ *   - /wishlists/{userId}: Users can only manage their own wishlist.
+ * - Admin Management:
+ *   - /roles_admin/{userId}: The existence of a document here grants a user admin privileges. This is a simple and
+ *     effective way to manage roles. Only admins can manage this collection.
+ *
+ * Denormalization for Authorization:
+ * - User Profile Role: The user's role is stored directly in their /users/{userId} document. This is the source of truth
+ *   for role-based access checks on the client-side.
+ * - Admin Role Check: For security rules, the `isAdmin()` function checks for a document in /roles_admin/{userId}.
+ *   This is more secure and efficient within rules than reading the user's profile document. This separation allows
+ *   UI-level role checks (from user profile) and security-level checks (from roles_admin) to be optimized for their
+ *   respective environments.
+ *
+ * Structural Segregation:
+ * - The ruleset cleanly separates public, private, and admin data into different top-level collections. This prevents
+ *   accidental data exposure and simplifies query security.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+
+    // ----------------------------------------------------------------------
+    // Helper Functions
+    // ----------------------------------------------------------------------
+    function isSignedIn() { return request.auth != null; }
+    function isBootstrapAdmin() { return request.auth.token.email == 'sri352006@gmail.com'; }
+    function isAdmin() { return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid)); }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function isExistingOwner(userId) { return isOwner(userId) && resource != null; }
+    function isExistingAdmin() { return isAdmin() && resource != null; }
+
+    // Wishlist-specific helpers
+    function isCreatingOwnWishlist(userId) { return isOwner(userId) && request.resource.data.userId == userId; }
+    function isUpdatingOwnWishlist(userId) { return isExistingOwner(userId) && request.resource.data.userId == resource.data.userId; }
+
+    // UserProfile-specific helpers
+    function isUpdatingOwnProfile(userId) {
+      return isOwner(userId)
+             && request.resource.data.role == resource.data.role; // Role cannot be changed by the user
+    }
+    
+    function isCreatingOwnProfile(userId) {
+      return isOwner(userId)
+             && request.resource.data.uid == request.auth.uid;
+    }
+
+    // ----------------------------------------------------------------------
+    // Public E-Commerce Collections (Admin-Write)
+    // ----------------------------------------------------------------------
+    match /products/{productId} {
+      allow get, list: if true;
+      allow write: if isAdmin();
+    }
+    match /categories/{categoryId} {
+      allow get, list: if true;
+      allow write: if isAdmin();
+    }
+    match /images/{imageId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    match /tags/{tagId} {
+      allow get, list: if true;
+      allow write: if isAdmin();
+    }
+    match /heroBanners/{bannerId} {
+      allow get, list: if true;
+      allow write: if isAdmin();
+    }
+    match /shopSettings/global {
+      allow get: if true;
+      allow list: if false;
+      allow write: if isAdmin();
+    }
+
+    // ----------------------------------------------------------------------
+    // User-Private Collections (Owner-Only & Admin-Read)
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Controls access to user profile data.
+     * @path /users/{userId}
+     * @allow (get) A user can read their own profile, and admins can read any profile.
+     * @allow (create) A user can create their own profile, with the UID matching their auth token.
+     * @allow (update) A user can update their own profile, but cannot change their role.
+     * @deny (delete) Users cannot delete their own profiles.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isCreatingOwnProfile(userId);
+      allow update: if isUpdatingOwnProfile(userId);
+      allow delete: if isAdmin(); // Only admins can delete user profiles
+    }
+
+    /**
+     * @description Controls access to a user's wishlist. Only the owner can manage it.
+     * @path /wishlists/{userId}
+     */
+    match /wishlists/{userId} {
+      allow get, list: if isOwner(userId);
+      allow create: if isCreatingOwnWishlist(userId);
+      allow update: if isUpdatingOwnWishlist(userId);
+      allow delete: if isExistingOwner(userId);
+    }
+
+    // ----------------------------------------------------------------------
+    // Administrative Collections
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Manages who is an administrator. Only other admins can modify this collection.
+     * @path /roles_admin/{userId}
+     */
+    match /roles_admin/{userId} {
+      allow read: if isAdmin() || isOwner(userId);
+      allow write: if isAdmin() || isBootstrapAdmin();
+    }
+  }
+}

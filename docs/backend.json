@@ -1,0 +1,554 @@
+{
+  "entities": {
+    "Product": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Product",
+      "type": "object",
+      "description": "Represents a watch or an accessory available for sale in the store.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Product entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the watch or accessory."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the product."
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the product in INR."
+        },
+        "stockStatus": {
+          "type": "string",
+          "description": "The current stock availability status of the product (e.g., 'available', 'out_of_stock')."
+        },
+        "isTrending": {
+          "type": "boolean",
+          "description": "Indicates if the product is currently trending and should be highlighted."
+        },
+        "viewCount": {
+          "type": "number",
+          "description": "The number of times the product page has been viewed."
+        },
+        "style": {
+          "type": "string",
+          "description": "The style of the watch (e.g., 'Casual', 'Formal', 'Sports'). Used for recommendations and filters."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of watch (e.g., 'Analog', 'Digital', 'Smartwatch'). Used for filters."
+        },
+        "categoryId": {
+          "type": "string",
+          "description": "Reference to the Category this product belongs to. (Relationship: Category 1:N Product)"
+        },
+        "imageIds": {
+          "type": "array",
+          "description": "References to Image entities associated with this product. (Relationship: Product N:N Image)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tagIds": {
+          "type": "array",
+          "description": "References to Tag entities applied to this product for filtering and organization. (Relationship: Product N:N Tag)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "relatedProductIds": {
+          "type": "array",
+          "description": "References to other Product entities that are related or complementary. (Relationship: Product N:N Product)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "suggestedAccessoryIds": {
+          "type": "array",
+          "description": "References to Product entities specifically suggested as accessories (e.g., watch straps). (Relationship: Product N:N Product as Accessory)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the product was first created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the product information was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "price",
+        "stockStatus",
+        "categoryId",
+        "imageIds"
+      ]
+    },
+    "Category": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Category",
+      "type": "object",
+      "description": "Represents a classification for products, such as Men Watches, Women Watches, or Kids Watches.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Category entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The display name of the category (e.g., 'Men Watches')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the category."
+        },
+        "slug": {
+          "type": "string",
+          "description": "A URL-friendly identifier for the category."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the category was first created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the category information was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "slug"
+      ]
+    },
+    "Image": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Image",
+      "type": "object",
+      "description": "Represents an image asset used across the website, such as product images or banner images.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Image entity."
+        },
+        "url": {
+          "type": "string",
+          "description": "The URL where the image can be accessed.",
+          "format": "uri"
+        },
+        "altText": {
+          "type": "string",
+          "description": "Alternative text for the image, important for accessibility and SEO."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the image was uploaded.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "url",
+        "altText"
+      ]
+    },
+    "Tag": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Tag",
+      "type": "object",
+      "description": "Represents a descriptive keyword or phrase used to categorize products for filtering or search.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Tag entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the tag (e.g., 'Water Resistant', 'Leather Strap')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of what the tag represents."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the tag was first created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "Wishlist": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Wishlist",
+      "type": "object",
+      "description": "Stores a collection of products that a user has marked as favorites for future consideration.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Wishlist entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the unique identifier of the user from an external authentication system. (Relationship: User 1:N Wishlist)"
+        },
+        "productIds": {
+          "type": "array",
+          "description": "References to Product entities added to this wishlist. (Relationship: Wishlist N:N Product)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the wishlist was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the wishlist was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "productIds"
+      ]
+    },
+    "HeroBanner": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "HeroBanner",
+      "type": "object",
+      "description": "Represents a promotional banner displayed prominently on the homepage.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the HeroBanner entity."
+        },
+        "title": {
+          "type": "string",
+          "description": "The main title text for the banner."
+        },
+        "description": {
+          "type": "string",
+          "description": "A short descriptive text for the banner."
+        },
+        "imageId": {
+          "type": "string",
+          "description": "Reference to the Image entity used for the banner visual. (Relationship: Image 1:N HeroBanner)"
+        },
+        "linkUrl": {
+          "type": "string",
+          "description": "The URL to navigate to when the banner is clicked.",
+          "format": "uri"
+        },
+        "displayOrder": {
+          "type": "number",
+          "description": "The order in which the banner should be displayed if multiple exist."
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Indicates if the banner is currently active and visible on the website."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the banner was first created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the banner information was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "imageId",
+        "linkUrl",
+        "displayOrder",
+        "isActive"
+      ]
+    },
+    "ShopSetting": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ShopSetting",
+      "type": "object",
+      "description": "Stores global configuration details and contact information for the Hi/sky Watch Store.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ShopSetting entity. Often a singleton with a fixed ID like 'global_settings'."
+        },
+        "shopName": {
+          "type": "string",
+          "description": "The official name of the watch shop."
+        },
+        "phone": {
+          "type": "string",
+          "description": "The primary contact phone number for the shop."
+        },
+        "email": {
+          "type": "string",
+          "description": "The primary contact email address for the shop.",
+          "format": "email"
+        },
+        "address": {
+          "type": "string",
+          "description": "The physical address of the shop."
+        },
+        "gpayEmail": {
+          "type": "string",
+          "description": "The email address associated with the GPay account for orders.",
+          "format": "email"
+        },
+        "gpayNumber": {
+          "type": "string",
+          "description": "The phone number associated with the GPay account for orders."
+        },
+        "lastUpdatedAt": {
+          "type": "string",
+          "description": "Timestamp when the shop settings were last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "shopName",
+        "phone",
+        "email",
+        "address",
+        "gpayEmail",
+        "gpayNumber"
+      ]
+    },
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Stores profile information for a user, including their role.",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "The user's unique ID from Firebase Auth."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The user's display name."
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "URL of the user's profile picture.",
+          "format": "uri"
+        },
+        "role": {
+          "type": "string",
+          "description": "The user's role, either 'admin' or 'user'.",
+          "enum": [
+            "admin",
+            "user"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the user profile was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "email",
+        "role",
+        "createdAt"
+      ]
+    },
+    "UserRole": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserRole",
+      "type": "object",
+      "description": "Defines an administrative role for a user. The existence of a document for a user in the roles_admin collection grants admin privileges.",
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": [
+            "admin"
+          ]
+        }
+      },
+      "required": [
+        "role"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "google.com"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/products/{productId}",
+        "definition": {
+          "entityName": "Product",
+          "schema": {
+            "$ref": "#/backend/entities/Product"
+          },
+          "description": "Stores individual product details. Publicly readable for all users. Write access is restricted to authenticated administrators.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "Unique identifier for the product."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/categories/{categoryId}",
+        "definition": {
+          "entityName": "Category",
+          "schema": {
+            "$ref": "#/backend/entities/Category"
+          },
+          "description": "Stores product categories like Men Watches, Women Watches, Kids Watches. Publicly readable. Write access is restricted to authenticated administrators.",
+          "params": [
+            {
+              "name": "categoryId",
+              "description": "Unique identifier for the category."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/images/{imageId}",
+        "definition": {
+          "entityName": "Image",
+          "schema": {
+            "$ref": "#/backend/entities/Image"
+          },
+          "description": "Stores metadata for image assets used across the website. Publicly readable. Write access is restricted to authenticated administrators.",
+          "params": [
+            {
+              "name": "imageId",
+              "description": "Unique identifier for the image."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/tags/{tagId}",
+        "definition": {
+          "entityName": "Tag",
+          "schema": {
+            "$ref": "#/backend/entities/Tag"
+          },
+          "description": "Stores descriptive keywords used for product filtering and organization. Publicly readable. Write access is restricted to authenticated administrators.",
+          "params": [
+            {
+              "name": "tagId",
+              "description": "Unique identifier for the tag."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/wishlists/{userId}",
+        "definition": {
+          "entityName": "Wishlist",
+          "schema": {
+            "$ref": "#/backend/entities/Wishlist"
+          },
+          "description": "Stores a collection of products marked as favorites by a user. Each document's ID is the user's UID. Only the owning user (`request.auth.uid`) can read and write to their own wishlist. Includes denormalized 'userId' for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user who owns this wishlist."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/heroBanners/{bannerId}",
+        "definition": {
+          "entityName": "HeroBanner",
+          "schema": {
+            "$ref": "#/backend/entities/HeroBanner"
+          },
+          "description": "Stores promotional banners displayed on the homepage. Publicly readable. Write access is restricted to authenticated administrators.",
+          "params": [
+            {
+              "name": "bannerId",
+              "description": "Unique identifier for the hero banner."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/shopSettings/global",
+        "definition": {
+          "entityName": "ShopSetting",
+          "schema": {
+            "$ref": "#/backend/entities/ShopSetting"
+          },
+          "description": "Stores global configuration and contact details for the shop as a singleton document. Publicly readable. Write access is restricted to authenticated administrators.",
+          "params": []
+        }
+      },
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores user profile information, including their role. A user can read/write their own profile. Admins can read any profile.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The user's unique ID."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{userId}",
+        "definition": {
+          "entityName": "UserRole",
+          "schema": {
+            "$ref": "#/backend/entities/UserRole"
+          },
+          "description": "Manages administrative roles using Database Access Control (DBAC). The existence of a document for a specific userId at this path grants administrator privileges. Only administrators can write to this collection to manage other admin roles. This supports Authorization Independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user who is designated as an administrator."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to support the application's features, including role-based access control. The '/users/{userId}' collection is added to store user profiles, which includes a 'role' field. This is crucial for distinguishing between regular users and administrators. Security rules will be configured to protect this data, allowing users to manage their own profiles while giving admins appropriate oversight. The '/roles_admin' collection is maintained for a quick and efficient way to check for admin privileges within security rules using `exists()`. Auth providers are updated to 'google.com' to match the new login system. This addresses the `(auth/configuration-not-found)` error by correctly defining the data structure needed by the application's authentication and authorization logic."
+  }
+}
+    
