@@ -26,30 +26,27 @@ export default function ProductDetailPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const id = params.id as string;
-  const { getProductById, updateProduct, images } = useProducts();
-  const [product, setProduct] = useState<Product | undefined | null>(undefined);
+  const { getProductById, updateProduct, images, loading } = useProducts();
+  const product = getProductById(id);
   const fromSearch = searchParams.get('from_search');
   const lastViewedId = useRef<string | null>(null);
 
   useEffect(() => {
-    const currentProduct = getProductById(id);
-    setProduct(currentProduct);
-
-    if (currentProduct && lastViewedId.current !== id) {
+    if (product && lastViewedId.current !== id) {
         lastViewedId.current = id;
-        const newViewCount = (currentProduct.viewCount || 0) + 1;
+        const newViewCount = (product.viewCount || 0) + 1;
         const updates: Partial<Product> = { viewCount: newViewCount };
 
         const TRENDING_THRESHOLD = 10;
-        if (newViewCount >= TRENDING_THRESHOLD && !currentProduct.isTrending) {
+        if (newViewCount >= TRENDING_THRESHOLD && !product.isTrending) {
             updates.isTrending = true;
         }
         
         updateProduct(id, updates);
     }
-  }, [id, getProductById, updateProduct]);
+  }, [id, product, updateProduct]);
 
-  if (product === undefined) {
+  if (loading && !product) {
     return (
       <div className="container py-8 md:py-12">
         <Skeleton className="h-8 w-1/2 mb-8" />

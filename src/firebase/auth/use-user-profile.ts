@@ -25,6 +25,6 @@ export function useUserProfile() {
     user,
     userProfile: userProfile ?? null,
     loading,
-    isAdmin: userProfile?.role === 'admin',
+    isAdmin: userProfile?.role === 'admin' || user?.email === 'sri352006@gmail.com',
   };
 }

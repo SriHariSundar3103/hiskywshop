@@ -87,7 +87,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     return products.find((p: Product) => p.id === id);
   }, [products]);
 
-  const contextValue: ProductContextType = {
+  const contextValue: ProductContextType = useMemo(() => ({
     products,
     images,
     loading: collectionLoading || imagesLoading || profileLoading,
@@ -96,7 +96,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     deleteProduct,
     addImage,
     getProductById,
-  };
+  }), [products, images, collectionLoading, imagesLoading, profileLoading, addProduct, updateProduct, deleteProduct, addImage, getProductById]);
 
   return (
     <ProductContext.Provider value={contextValue}>

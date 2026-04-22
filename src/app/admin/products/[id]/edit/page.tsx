@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import { useForm, Controller } from 'react-hook-form';
@@ -82,10 +82,13 @@ export default function EditProductPage() {
     }
   }, [category, form]);
 
+  const hasReset = useRef(false);
+
   useEffect(() => {
-    if (id && !productsLoading) {
+    if (id && !productsLoading && !hasReset.current) {
       const productToEdit = getProductById(id);
       if (productToEdit) {
+        hasReset.current = true;
         setProduct(productToEdit);
         form.reset({
           productName: productToEdit.name,
@@ -97,17 +100,21 @@ export default function EditProductPage() {
           stockStatus: productToEdit.stockStatus,
           images: productToEdit.images,
         });
-      } else {
-        // Products loaded but this ID doesn't exist — redirect
+      }
+    }
+  }, [id, productsLoading, getProductById, form]);
+
+  // Handle case where product is not found after loading
+  useEffect(() => {
+    if (!productsLoading && id && !getProductById(id) && !hasReset.current) {
         toast({
           variant: 'destructive',
           title: 'Product not found',
           description: 'Could not find a product with that ID.',
         });
         router.push('/admin/products');
-      }
     }
-  }, [id, productsLoading, getProductById, form, router, toast]);
+  }, [productsLoading, id, getProductById, router, toast]);
 
   const onSubmit = async (data: ProductFormValues) => {
     setIsSaving(true);
