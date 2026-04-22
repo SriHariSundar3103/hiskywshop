@@ -74,9 +74,12 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
   useEffect(() => {
     if (!auth || hasInitiatedAnonymousRef.current) return;
 
-    if (userAuthState.user === null && !userAuthState.isUserLoading) {
-      signInAnonymously(auth);
+    if (userAuthState.user === null && !userAuthState.isUserLoading && !hasInitiatedAnonymousRef.current) {
       hasInitiatedAnonymousRef.current = true;
+      signInAnonymously(auth).catch(err => {
+          console.error("FirebaseProvider: Anonymous sign-in failed:", err);
+          setUserAuthState(prev => ({ ...prev, userError: err }));
+      });
     }
   }, [auth, userAuthState.user, userAuthState.isUserLoading]);
 

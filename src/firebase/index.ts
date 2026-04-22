@@ -3,11 +3,15 @@
 import { firebaseConfig } from '@/firebase/config';
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore'
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
 
 export function initializeFirebase() {
   if (!getApps().length) {
     const firebaseApp = initializeApp(firebaseConfig);
+    // Use initializeFirestore to provide custom settings like long polling
+    initializeFirestore(firebaseApp, {
+        experimentalForceLongPolling: true,
+    });
     return getSdks(firebaseApp);
   }
 

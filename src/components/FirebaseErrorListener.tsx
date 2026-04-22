@@ -29,10 +29,14 @@ export function FirebaseErrorListener() {
     };
   }, []);
 
-  // On re-render, if an error exists in state, throw it.
-  if (error) {
-    throw error;
-  }
+  // On re-render, if an error exists in state, log it but don't throw.
+  // Throwing here causes Next.js to crash and often enter a reload loop if the error persists.
+  useEffect(() => {
+    if (error) {
+      console.error("Global Firebase Error Caught:", error);
+      // You could trigger a toast here if needed
+    }
+  }, [error]);
 
   // This component renders nothing.
   return null;
