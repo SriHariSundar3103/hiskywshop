@@ -171,7 +171,7 @@ export function Header() {
         </div>
 
         {/* Center & Right Section */}
-        <div className="flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-6">
            {/* Center Section: Nav */}
             <nav className="hidden md:flex items-center space-x-6 ml-8">
                 {categories.map((cat) => (
@@ -200,6 +200,7 @@ export function Header() {
         {/* Mobile Nav Trigger */}
         <div className="flex items-center gap-2 md:hidden">
           {searchDialog}
+          <UserNav />
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
