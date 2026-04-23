@@ -11,6 +11,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { ImageUploader } from '@/components/admin/image-uploader';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface ImageSelectorProps {
   selectedImages: string[]; // array of URLs
@@ -41,6 +43,16 @@ export function ImageSelector({ selectedImages, onSelectionChange }: ImageSelect
     }
   };
 
+  const handleUploadComplete = async (url: string) => {
+    // For uploaded images, we'll use a default description if none provided, 
+    // or we could prompt for one. For now, let's use the filename or a generic one.
+    const description = newImageDesc || 'Uploaded product image';
+    await addImage({ url, altText: description });
+    onSelectionChange([...selectedImages, url]);
+    setNewImageDesc('');
+    setIsDialogOpen(false);
+  };
+
   // Filter out category/banner images — show only product images
   const SYSTEM_IMAGE_IDS = ['hero-banner', 'category-men', 'category-women', 'category-kids'];
   const safeImages = images || [];
@@ -55,38 +67,64 @@ export function ImageSelector({ selectedImages, onSelectionChange }: ImageSelect
           <DialogTrigger asChild>
             <Button variant="outline" size="sm">
               <PlusCircle className="h-4 w-4 mr-2" />
-              Add Image by URL
+              Add New Image
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle>Add New Image</DialogTitle>
+              <DialogTitle>Add New Product Image</DialogTitle>
             </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="imageUrl">Image URL</Label>
-                <Input
-                  id="imageUrl"
-                  value={newImageUrl}
-                  onChange={(e) => setNewImageUrl(e.target.value)}
-                  placeholder="https://..."
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="imageDesc">Description (for alt text)</Label>
-                <Textarea
-                  id="imageDesc"
-                  value={newImageDesc}
-                  onChange={(e) => setNewImageDesc(e.target.value)}
-                  placeholder="A stylish watch on a wrist..."
-                />
-              </div>
+            <div className="py-4">
+              <Tabs defaultValue="upload" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="upload">Upload File</TabsTrigger>
+                  <TabsTrigger value="url">External URL</TabsTrigger>
+                </TabsList>
+                <TabsContent value="upload" className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="uploadDesc">Description (for alt text)</Label>
+                    <Input
+                      id="uploadDesc"
+                      value={newImageDesc}
+                      onChange={(e) => setNewImageDesc(e.target.value)}
+                      placeholder="e.g. Leather jacket front view"
+                    />
+                  </div>
+                  <ImageUploader onUploadComplete={handleUploadComplete} />
+                </TabsContent>
+                <TabsContent value="url" className="space-y-4 mt-4">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="imageUrl">Image URL</Label>
+                      <Input
+                        id="imageUrl"
+                        value={newImageUrl}
+                        onChange={(e) => setNewImageUrl(e.target.value)}
+                        placeholder="https://..."
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="imageDesc">Description (for alt text)</Label>
+                      <Textarea
+                        id="imageDesc"
+                        value={newImageDesc}
+                        onChange={(e) => setNewImageDesc(e.target.value)}
+                        placeholder="A stylish watch on a wrist..."
+                      />
+                    </div>
+                    <Button 
+                      className="w-full" 
+                      onClick={handleAddImage} 
+                      disabled={!newImageUrl || !newImageDesc}
+                    >
+                      Add from URL
+                    </Button>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
             <DialogFooter>
               <Button variant="ghost" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-              <Button onClick={handleAddImage} disabled={!newImageUrl || !newImageDesc}>
-                Add Image
-              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
