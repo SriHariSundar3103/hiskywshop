@@ -6,7 +6,7 @@ import { cn, getSafeImageUrl } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Check, PlusCircle } from 'lucide-react';
 import { useProducts } from '@/context/product-context';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -73,6 +73,9 @@ export function ImageSelector({ selectedImages, onSelectionChange }: ImageSelect
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
               <DialogTitle>Add New Product Image</DialogTitle>
+              <DialogDescription>
+                Upload a file from your device or add an image using an external URL.
+              </DialogDescription>
             </DialogHeader>
             <div className="py-4">
               <Tabs defaultValue="upload" className="w-full">

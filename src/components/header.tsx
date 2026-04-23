@@ -11,6 +11,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -141,6 +142,9 @@ export function Header() {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Search for Products</DialogTitle>
+          <DialogDescription>
+            Enter a product name or category to find what you're looking for.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSearchSubmit} className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
