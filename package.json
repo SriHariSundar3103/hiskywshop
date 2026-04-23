@@ -9,7 +9,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "perf": "node tests/performance/run-all.mjs",
+    "perf:concurrency": "node tests/performance/node/concurrency-test.mjs",
+    "perf:lighthouse": "node tests/performance/lighthouse/lighthouse-audit.mjs",
+    "perf:firestore": "node tests/performance/firestore/firestore-perf-test.mjs",
+    "perf:k6": "k6 run tests/performance/k6/load-test.js",
+    "perf:k6:stress": "k6 run tests/performance/k6/stress-test.js",
+    "perf:k6:spike": "k6 run tests/performance/k6/spike-test.js"
   },
   "dependencies": {
     "@genkit-ai/google-genai": "^1.28.0",
