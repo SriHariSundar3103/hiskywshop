@@ -64,6 +64,22 @@ function NavLinkWithDropdown({ category }: { category: Category }) {
 }
 
 function UserNav() {
+    const [isClientReady, setIsClientReady] = React.useState(false);
+
+    React.useEffect(() => {
+        setIsClientReady(true);
+    }, []);
+
+    // HYDRATION FIX: Defer Firebase hook call until client is ready
+    // This prevents SSR from trying to access Firebase context
+    if (!isClientReady) {
+        return <Skeleton className="h-8 w-8 rounded-full" />;
+    }
+
+    return <UserNavContent />;
+}
+
+function UserNavContent() {
     const { user, isAdmin, loading } = useUserProfile();
     const router = useRouter();
 
