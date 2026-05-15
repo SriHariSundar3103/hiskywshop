@@ -1,5 +1,8 @@
 'use client';
 
+// HYDRATION FIX: Disable static generation to prevent prerendering issues with Firebase
+export const dynamic = 'force-dynamic';
+
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';

@@ -1,5 +1,8 @@
 'use client';
 
+// HYDRATION FIX: Disable static generation to prevent prerendering issues with Firebase
+export const dynamic = 'force-dynamic';
+
 import { notFound, useParams, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useProducts } from '@/context/product-context';

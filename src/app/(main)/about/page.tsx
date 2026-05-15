@@ -1,3 +1,6 @@
+// HYDRATION FIX: Disable static generation to prevent prerendering issues with Firebase
+export const dynamic = 'force-dynamic';
+
 import Image from 'next/image';
 import { businessDetails } from '@/lib/data';
 

@@ -1,5 +1,8 @@
 'use client';
 
+// HYDRATION FIX: Disable static generation to prevent prerendering issues with Firebase
+export const dynamic = 'force-dynamic';
+
 import { HeroBanner } from '@/components/hero-banner';
 import { CategoryShowcase } from '@/components/category-showcase';
 import { ProductGrid } from '@/components/product-grid';

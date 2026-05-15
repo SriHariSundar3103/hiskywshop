@@ -1,5 +1,8 @@
 'use client';
 
+// HYDRATION FIX: Disable static generation to prevent prerendering issues with Firebase
+export const dynamic = 'force-dynamic';
+
 import { useProducts } from '@/context/product-context';
 import { categories } from '@/lib/data';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
