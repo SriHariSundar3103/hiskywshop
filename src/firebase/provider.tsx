@@ -7,6 +7,12 @@ import { Auth, User, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseErrorListener } from '@/components/FirebaseErrorListener';
 import { signInAnonymously } from 'firebase/auth';
 
+// DEBUG: ensure auth instance exists and is correctly initialized
+function debugAuth(auth: Auth | null) {
+  // eslint-disable-next-line no-console
+  console.log('AUTH:', auth);
+}
+
 interface FirebaseProviderProps {
   children: ReactNode;
   firebaseApp: FirebaseApp;
@@ -83,6 +89,9 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
       });
     }
   }, [auth, userAuthState.user, userAuthState.isUserLoading]);
+
+  // DEBUG: log auth instance as early as possible (should never be null inside provider)
+  debugAuth(auth);
 
   // Effect to subscribe to Firebase auth state changes
 
