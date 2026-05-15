@@ -1,6 +1,15 @@
+'use client';
+
+import dynamic from 'next/dynamic';
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { MaintenanceWrapper } from "@/components/maintenance-wrapper";
+
+// HYDRATION FIX: Dynamically import MaintenanceWrapper with ssr: false
+// to prevent Firebase hooks from executing during server-side rendering
+const MaintenanceWrapper = dynamic(
+  () => import("@/components/maintenance-wrapper").then(mod => mod.MaintenanceWrapper),
+  { ssr: false, loading: () => <></> }
+);
 
 export default function MainLayout({
   children,

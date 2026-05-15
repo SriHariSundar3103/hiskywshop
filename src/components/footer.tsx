@@ -1,42 +1,16 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Icons } from '@/components/icons';
 import { businessDetails, categories } from '@/lib/data';
 import { Github, Twitter, Instagram } from 'lucide-react';
-import { useUserProfile } from '@/firebase/auth/use-user-profile';
-import { useState, useEffect } from 'react';
 
-function AdminFooterLink() {
-  const [isClientReady, setIsClientReady] = useState(false);
-
-  useEffect(() => {
-    setIsClientReady(true);
-  }, []);
-
-  // HYDRATION FIX: Defer Firebase hook call until client is ready
-  if (!isClientReady) {
-    return null;
-  }
-
-  return <AdminFooterLinkContent />;
-}
-
-function AdminFooterLinkContent() {
-  const { isAdmin, loading } = useUserProfile();
-
-  if (loading || !isAdmin) {
-    return null;
-  }
-
-  return (
-    <li>
-      <Link href="/admin" className="text-sm text-gray-300 hover:text-white transition-colors">
-        Admin
-      </Link>
-    </li>
-  );
-}
+// HYDRATION FIX: Dynamically import Firebase-dependent component with ssr: false
+const AdminFooterLink = dynamic(() => import('./footer-admin-link').then(mod => mod.AdminFooterLink), {
+  ssr: false,
+  loading: () => null,
+});
 
 
 export function Footer() {

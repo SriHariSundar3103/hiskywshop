@@ -3,7 +3,7 @@
 import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useUserProfile } from '@/firebase/auth/use-user-profile';
-import { ReactNode, useState, useEffect } from 'react';
+import { ReactNode, useMemo } from 'react';
 
 interface MaintenanceSettings {
   isEnabled: boolean;
@@ -11,24 +11,6 @@ interface MaintenanceSettings {
 }
 
 export function MaintenanceWrapper({ children }: { children: ReactNode }) {
-  // HYDRATION FIX: Defer Firebase hooks until client is ready
-  // This prevents SSR/prerendering from trying to access Firebase context
-  const [isClientReady, setIsClientReady] = useState(false);
-
-  useEffect(() => {
-    setIsClientReady(true);
-  }, []);
-
-  // During SSR or before client is ready, just render children
-  if (!isClientReady) {
-    return <>{children}</>;
-  }
-
-  // Now safe to use Firebase hooks (client-side only)
-  return <MaintenanceWrapperContent>{children}</MaintenanceWrapperContent>;
-}
-
-function MaintenanceWrapperContent({ children }: { children: ReactNode }) {
   const db = useFirestore();
   const { isAdmin } = useUserProfile();
   
