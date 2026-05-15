@@ -21,8 +21,11 @@ export function MaintenanceWrapper({ children }: { children: ReactNode }) {
 
   const { data: settings, isLoading } = useDoc<MaintenanceSettings>(settingsRef);
 
+  // HYDRATION FIX: Always render children during loading state
+  // This ensures server (during SSR) and client (during hydration) render the same content
+  // Once loaded, show maintenance screen only if enabled
   if (isLoading) {
-    return null; // or a loading spinner
+    return <>{children}</>;
   }
 
   // If maintenance mode is ON and user is NOT admin, show maintenance screen

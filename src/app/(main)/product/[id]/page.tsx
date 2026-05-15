@@ -4,6 +4,7 @@ import { notFound, useParams, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useProducts } from '@/context/product-context';
 import { businessDetails } from '@/lib/data';
+import { formatPriceWithCurrency } from '@/lib/hydration-utils';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -165,7 +166,7 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          <p className="text-4xl font-bold text-[#B12704]">₹{product.price.toLocaleString()}</p>
+          <p className="text-4xl font-bold text-[#B12704]">{formatPriceWithCurrency(product.price)}</p>
           
           <div className="flex items-center gap-2">
             <CheckCircle className={`w-5 h-5 ${product.stockStatus === 'Available' ? 'text-green-600' : 'text-red-600'}`} />

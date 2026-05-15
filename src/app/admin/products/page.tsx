@@ -25,6 +25,7 @@ import { useProducts } from '@/context/product-context';
 import { Badge } from '@/components/ui/badge';
 import { MoreHorizontal, PlusCircle } from 'lucide-react';
 import { getSafeImageUrl } from '@/lib/utils';
+import { formatPriceWithCurrency } from '@/lib/hydration-utils';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -163,7 +164,7 @@ export default function AdminProductsPage() {
                       </Badge>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      ₹{product.price.toLocaleString()}
+                      {formatPriceWithCurrency(product.price)}
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>

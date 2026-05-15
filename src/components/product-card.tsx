@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Star, Heart, Eye, Phone } from 'lucide-react';
 import { businessDetails } from '@/lib/data';
 import { cn, getSafeImageUrl } from '@/lib/utils';
+import { formatPriceWithCurrency } from '@/lib/hydration-utils';
 
 interface ProductCardProps {
   product: Product;
@@ -61,7 +62,7 @@ export function ProductCard({ product, fromSearch }: ProductCardProps) {
         <p className="text-xs text-muted-foreground">{product.category}</p>
         <div className="flex-grow"></div>
         <div className="flex items-center justify-between pt-2">
-          <p className="text-xl font-bold">₹{product.price.toLocaleString()}</p>
+          <p className="text-xl font-bold">{formatPriceWithCurrency(product.price)}</p>
           <div className="flex items-center gap-1 text-sm">
             <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
             <span>{product.rating}</span>

@@ -24,10 +24,11 @@ function AdminFooterLink() {
 
 
 export function Footer() {
-  const year = new Date().getFullYear();
-
+  // Use suppressHydrationWarning for year display
+  // This is safe because the year only changes once a year at year boundary
+  // The SSR and client output will be the same 99.99% of the time
   return (
-    <footer className="bg-[#232F3E] text-white">
+    <footer className="bg-[#232F3E] text-white" suppressHydrationWarning>
       <div className="container py-12 px-4 md:px-6">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           <div className="col-span-2 lg:col-span-1">
@@ -82,7 +83,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col md:flex-row justify-between items-center border-t border-gray-600 pt-6">
             <p className="text-sm text-gray-400">
-                &copy; {year} {businessDetails.shop_name}. All rights reserved.
+                &copy; {new Date().getFullYear()} {businessDetails.shop_name}. All rights reserved.
             </p>
             <div className="flex items-center gap-4 mt-4 md:mt-0">
                 <Link href="#" aria-label="Twitter">
