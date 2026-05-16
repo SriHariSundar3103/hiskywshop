@@ -1,10 +1,8 @@
-# TODO: Fix Build Errors & Admin Dashboard
+## TODO-Fixes: Firebase Storage CORS preflight failure
 
-## Step 1: Create .env.local with Firebase config [DONE]
-## Step 2: Update src/firebase/config.ts to use env vars [DONE]
-## Step 3: Update src/firebase/index.ts to improve init [PENDING]
-## Step 4: Update src/app/admin/products/new/page.tsx - make dynamic + null checks [DONE]
-## Step 5: Investigate/Fix admin dashboard button - made /admin/dashboard & /admin/products dynamic [DONE]
-## Step 6: Test: npm run build && npm run dev, check /admin/products/new & dashboard buttons [PENDING]
-## Step 7: Complete & cleanup TODO [PENDING]
+- [x] Identify that upload uses Firebase Storage SDK (`src/components/admin/image-uploader.tsx`).
+- [x] Check existing `firebase-cors.json` and confirm missing `OPTIONS` handling.
+- [ ] Deploy updated CORS config to Firebase Storage (use `gsutil cors set firebase-cors.json gs://<your-bucket>` or Firebase CLI workflow).
+- [ ] Re-test upload from `hiskywshop.vercel.app` and confirm preflight now returns HTTP 200.
+- [ ] If still failing, verify bucket name/env and that CORS rules are applied to the correct Storage bucket.
 
