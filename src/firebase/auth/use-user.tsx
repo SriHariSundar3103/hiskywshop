@@ -10,6 +10,13 @@ export function useUser() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Guard: provider may not have initialized auth yet
+    if (!auth) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
@@ -17,6 +24,7 @@ export function useUser() {
 
     return () => unsubscribe();
   }, [auth]);
+
 
   return { user, loading };
 }
