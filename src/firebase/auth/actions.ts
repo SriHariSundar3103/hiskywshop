@@ -35,6 +35,12 @@ export async function signInWithGoogle(): Promise<{ user: User; profile: any } |
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
+    if (!user?.uid) {
+      // Prevent invalid Firestore paths like doc(db, 'users', '')
+      console.error('Sign-in succeeded but user.uid is missing/invalid.');
+      return null;
+    }
+
     // Auto-admin detection logic
     const role =
       user.email === 'sri352006@gmail.com' ||
@@ -68,6 +74,7 @@ export async function signInWithGoogle(): Promise<{ user: User; profile: any } |
     return null;
   }
 }
+
 
 export async function signOut() {
   const { auth } = initializeFirebase();
